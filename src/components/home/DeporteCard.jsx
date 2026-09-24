@@ -7,8 +7,8 @@ function cupoPct(deporte) {
 
 export default function DeporteCard({ deporte, users, user, compact, onInscribir }) {
   const lleno = deporte.inscritosIds.length >= deporte.cupo
-  const inscrito = deporte.inscritosIds.includes(user.id)
-  const enseña = deporte.horarios.some((h) => h.docenteId === user.id)
+  const inscrito = !!user && deporte.inscritosIds.includes(user.id)
+  const enseña = !!user && deporte.horarios.some((h) => h.docenteId === user.id)
 
   return (
     <article className={compact ? 'deporte-card' : 'deporte-destacado'}>
@@ -33,7 +33,7 @@ export default function DeporteCard({ deporte, users, user, compact, onInscribir
           })}
         </div>
         <div className="home-actions">
-          {user.rol === 'estudiante' && (
+          {user?.rol === 'estudiante' && (
             <button
               className="btn primary"
               disabled={lleno || inscrito}
@@ -42,13 +42,13 @@ export default function DeporteCard({ deporte, users, user, compact, onInscribir
               {inscrito ? 'Ya inscrito' : lleno ? 'Sin cupo' : 'Inscribirme'}
             </button>
           )}
-          {user.rol === 'docente' && enseña && (
+          {user?.rol === 'docente' && enseña && (
             <Link className="btn primary" to={`/docente/grupos/${deporte.id}`}>Ver mi grupo</Link>
           )}
-          {user.rol === 'docente' && !enseña && (
+          {user?.rol === 'docente' && !enseña && (
             <span className="chip">Oferta abierta al campus</span>
           )}
-          {user.rol === 'admin' && (
+          {user?.rol === 'admin' && (
             <Link className="btn primary" to={`/admin/deportes/${deporte.id}`}>Gestionar disciplina</Link>
           )}
         </div>

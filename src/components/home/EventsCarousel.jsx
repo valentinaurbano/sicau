@@ -30,9 +30,9 @@ export default function EventsCarousel({ eventos, user, onParticipar }) {
   }
 
   const actual = destacados[Math.min(indice, destacados.length - 1)]
-  const inscrito = actual.inscritosIds.includes(user.id)
+  const inscrito = !!user && actual.inscritosIds.includes(user.id)
   const lleno = actual.inscritosIds.length >= actual.cupo
-  const esEstudiante = user.rol === 'estudiante'
+  const esEstudiante = user?.rol === 'estudiante'
 
   return (
     <section className="home-section" aria-labelledby="agenda-campus">
@@ -72,10 +72,10 @@ export default function EventsCarousel({ eventos, user, onParticipar }) {
                   {inscrito ? 'Ya participas' : lleno ? 'Sin cupo' : 'Quiero participar'}
                 </button>
               )}
-              {user.rol === 'admin' && (
+              {user?.rol === 'admin' && (
                 <Link className="btn gold" to="/admin/eventos">Gestionar eventos</Link>
               )}
-              {user.rol === 'docente' && (
+              {user?.rol === 'docente' && (
                 <Link className="btn gold" to="/docente">Ver mi agenda de hoy</Link>
               )}
             </div>

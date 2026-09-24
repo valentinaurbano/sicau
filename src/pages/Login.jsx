@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store/StoreContext.jsx'
+import { rutaInicial } from '../auth/rutas.js'
 import { EMAIL_DOMAIN, emailDomainError, isInstitutionalEmail } from '../utils/email.js'
 
 export default function Login() {
@@ -18,7 +19,7 @@ export default function Login() {
     }
     const res = login(correo, password)
     if (!res.ok) setError(res.error)
-    else nav('/')
+    else nav(rutaInicial(res.user))
   }
 
   return (
@@ -52,6 +53,9 @@ export default function Login() {
           admin@{EMAIL_DOMAIN} / admin123<br />
           docente@{EMAIL_DOMAIN} / docente123<br />
           estudiante@{EMAIL_DOMAIN} / estudiante123
+        </p>
+        <p style={{ marginTop: 12 }}>
+          <Link to="/">Volver al inicio</Link>
         </p>
       </form>
     </div>

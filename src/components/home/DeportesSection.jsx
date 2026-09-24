@@ -31,12 +31,16 @@ export default function DeportesSection({ deportes, users, user, onInscribir }) 
         <div className="home-section__head">
           <div>
             <h2 id="modulo-deportes">Deportes</h2>
-            <p>Disciplinas, horarios reales e inscripción según tu rol. Este módulo sí está vivo.</p>
+            <p>
+              {user?.rol === 'estudiante'
+                ? 'Disciplinas, horarios reales e inscripción según tu rol. Este módulo sí está vivo.'
+                : 'Disciplinas y horarios disponibles para toda la comunidad. Este módulo sí está vivo.'}
+            </p>
           </div>
-          {user.rol === 'estudiante' && (
+          {user?.rol === 'estudiante' && (
             <Link className="btn ghost" to="/estudiante/catalogo">Catálogo completo</Link>
           )}
-          {user.rol === 'admin' && (
+          {user?.rol === 'admin' && (
             <Link className="btn ghost" to="/admin/deportes">Panel de deportes</Link>
           )}
         </div>

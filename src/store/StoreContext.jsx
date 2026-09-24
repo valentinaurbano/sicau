@@ -96,7 +96,22 @@ export function StoreProvider({ children }) {
   const [alertas, setAlertas] = useState([
     { id: 'al1', titulo: 'Inicio de inscripciones', mensaje: 'Ya puedes inscribirte al catálogo 2026-2.', audiencia: 'Todos' },
   ])
-  const [asistencias, setAsistencias] = useState([])
+  const [asistencias, setAsistencias] = useState([
+    {
+      id: 'as1',
+      deporteId: 'd2',
+      fecha: '2026-09-09',
+      createdAt: '2026-09-09T18:00:00.000Z',
+      registros: [{ estudianteId: 'e1', presente: false }],
+    },
+    {
+      id: 'as2',
+      deporteId: 'd2',
+      fecha: '2026-09-16',
+      createdAt: '2026-09-16T18:00:00.000Z',
+      registros: [{ estudianteId: 'e1', presente: true }],
+    },
+  ])
   const [user, setUser] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem('sicau-user')) || null
@@ -118,7 +133,7 @@ export function StoreProvider({ children }) {
     if (!found) return { ok: false, error: 'Credenciales inválidas' }
     const { password: _, ...safe } = found
     persist(safe)
-    return { ok: true }
+    return { ok: true, user: safe }
   }
 
   function logout() {

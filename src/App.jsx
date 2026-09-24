@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useStore } from './store/StoreContext.jsx'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
+import { rutaInicial } from './auth/rutas.js'
 import AppLayout from './layouts/AppLayout.jsx'
 import Login from './pages/Login.jsx'
 import AdminDashboard from './pages/admin/AdminDashboard.jsx'
@@ -21,11 +22,19 @@ import Home from './pages/Home.jsx'
 
 export default function App() {
   const { user } = useStore()
-  const home = user ? '/inicio' : '/login'
+  const destino = rutaInicial(user)
 
   return (
     <Routes>
-      <Route path="/login" element={user ? <Navigate to={home} replace /> : <Login />} />
+      <Route
+        path="/"
+        element={user ? <Navigate to={destino} replace /> : (
+          <div className="public-shell">
+            <Home />
+          </div>
+        )}
+      />
+      <Route path="/login" element={user ? <Navigate to={destino} replace /> : <Login />} />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
@@ -56,8 +65,7 @@ export default function App() {
         </Route>
       </Route>
 
-      <Route path="/" element={<Navigate to={home} replace />} />
-      <Route path="*" element={<Navigate to={home} replace />} />
+      <Route path="*" element={<Navigate to={destino} replace />} />
     </Routes>
   )
 }

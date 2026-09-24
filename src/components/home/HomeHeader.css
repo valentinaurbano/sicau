@@ -1,0 +1,116 @@
+/* Usa los tokens (--ua-*) definidos en Navbar.css */
+
+.home-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  margin: 1.5rem 0;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border: 1px solid var(--ua-line);
+  border-radius: 28px 28px 28px 96px;
+  background:
+    radial-gradient(110% 140% at 0% 0%, var(--ua-gold-soft) 0%, transparent 55%),
+    linear-gradient(135deg, #fff 45%, var(--ua-mist) 100%);
+}
+
+.home-header__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.9rem;
+  color: var(--ua-muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.home-header__eyebrow::before {
+  content: '';
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: var(--ua-gold);
+  box-shadow: 0 0 0 4px var(--ua-gold-soft);
+}
+
+.home-header h1 {
+  margin: 0;
+  color: var(--ua-ink);
+  font-size: clamp(2rem, 4.6vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.home-header h1 em {
+  font-style: normal;
+  color: var(--ua-navy);
+  background: linear-gradient(transparent 62%, var(--ua-gold) 62%, var(--ua-gold) 92%, transparent 92%);
+}
+
+.home-header__lead {
+  max-width: 56ch;
+  margin: 1.1rem 0 0;
+  color: var(--ua-muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+/* Tarjeta de sesión / fecha */
+.home-header__stamp {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 15rem;
+  padding: 1.25rem 1.4rem;
+  border-radius: 22px 22px 22px 6px;
+  background: var(--ua-navy);
+  color: #fff;
+  box-shadow: 0 22px 40px -22px rgb(12 31 122 / 0.6);
+}
+.home-header__stamp small {
+  color: rgb(255 255 255 / 0.8);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.home-header__date {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+.home-header__day {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ua-gold);
+}
+.home-header__month {
+  display: grid;
+  line-height: 1.2;
+  font-weight: 600;
+}
+.home-header__month span:first-child {
+  color: rgb(255 255 255 / 0.8);
+  font-size: 0.9rem;
+}
+.home-header__month span {
+  display: block;
+}
+.home-header__month span::first-letter {
+  text-transform: uppercase;
+}
+
+.home-header__login {
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+}
+
+@media (max-width: 720px) {
+  .home-header {
+    grid-template-columns: 1fr;
+    border-radius: 24px 24px 24px 56px;
+  }
+  .home-header__stamp {
+    min-width: 0;
+  }
+}

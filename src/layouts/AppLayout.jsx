@@ -16,7 +16,6 @@ const menus = {
     ['/docente/asistencias', 'Historial'],
   ],
   estudiante: [
-    ['/inicio', 'Inicio'],
     ['/estudiante/catalogo', 'Catálogo'],
     ['/estudiante/eventos', 'Eventos'],
     ['/estudiante/mis-deportes', 'Mis deportes'],
@@ -33,10 +32,10 @@ export default function AppLayout() {
   return (
     <div className="layout">
       <aside className="sidebar">
-        <div className="brand">
+        <NavLink to="/inicio" className="brand" end>
           Uniautónoma
           <small>Universidad Autónoma del Cauca</small>
-        </div>
+        </NavLink>
         <nav className="nav">
           {links.map(([to, label]) => (
             <NavLink key={to} to={to} end={to.split('/').length <= 2}>
@@ -52,7 +51,7 @@ export default function AppLayout() {
             <button
               className="btn ghost"
               style={{ color: '#fff', borderColor: 'rgba(255,255,255,.3)' }}
-              onClick={() => { logout(); nav('/login') }}
+              onClick={() => { logout(); nav('/') }}
             >
               Salir
             </button>

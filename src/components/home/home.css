@@ -78,6 +78,34 @@
   font-size: 0.78rem;
 }
 
+.home-header__login {
+  margin-top: 0.85rem;
+  width: 100%;
+}
+
+.estudiante-resumen {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.inasistencias-list {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inasistencias-list li {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--danger);
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  margin-top: 0.45rem;
+  font-size: 0.9rem;
+}
+
 .home-section {
   margin-bottom: 2.6rem;
 }
@@ -543,5 +571,9 @@
   .deporte-card:nth-child(3n + 2) {
     grid-column: span 12;
     transform: none;
+  }
+
+  .estudiante-resumen {
+    grid-template-columns: 1fr;
   }
 }

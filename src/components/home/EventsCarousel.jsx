@@ -76,7 +76,7 @@ export default function EventsCarousel({ eventos, user, onParticipar }) {
                 <Link className="btn gold" to="/admin/eventos">Gestionar eventos</Link>
               )}
               {user.rol === 'docente' && (
-                <span className="chip">Visible para tu rol · inscripción de estudiantes</span>
+                <Link className="btn gold" to="/docente">Ver mi agenda de hoy</Link>
               )}
             </div>
           </div>

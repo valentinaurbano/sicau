@@ -3,6 +3,7 @@ import { useStore } from '../store/StoreContext.jsx'
 
 const menus = {
   admin: [
+    ['/inicio', 'Inicio'],
     ['/admin', 'Dashboard'],
     ['/admin/deportes', 'Deportes'],
     ['/admin/eventos', 'Eventos'],
@@ -10,10 +11,12 @@ const menus = {
     ['/admin/comunicados', 'Comunicados'],
   ],
   docente: [
+    ['/inicio', 'Inicio'],
     ['/docente', 'Hoy'],
     ['/docente/asistencias', 'Historial'],
   ],
   estudiante: [
+    ['/inicio', 'Inicio'],
     ['/estudiante/catalogo', 'Catálogo'],
     ['/estudiante/eventos', 'Eventos'],
     ['/estudiante/mis-deportes', 'Mis deportes'],

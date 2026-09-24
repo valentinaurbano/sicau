@@ -46,8 +46,39 @@ const seedDeportes = [
 ]
 
 const seedEventos = [
-  { id: 'ev1', nombre: 'Torneo relámpago', fecha: '2026-10-12', lugar: 'Cancha norte', tipo: 'Torneo', cupo: 32, inscritosIds: [] },
-  { id: 'ev2', nombre: 'Masterclass de yoga', fecha: '2026-10-04', lugar: 'Gimnasio', tipo: 'Masterclass', cupo: 20, inscritosIds: ['e1'] },
+  {
+    id: 'ev1',
+    nombre: 'Torneo relámpago',
+    fecha: '2026-10-12',
+    lugar: 'Cancha norte',
+    tipo: 'Torneo',
+    cupo: 32,
+    inscritosIds: [],
+    descripcion: 'Equipos mixtos, partidos cortos y snack al final. Abierto a toda la comunidad.',
+    imagen: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200',
+  },
+  {
+    id: 'ev2',
+    nombre: 'Masterclass de yoga',
+    fecha: '2026-10-04',
+    lugar: 'Gimnasio',
+    tipo: 'Masterclass',
+    cupo: 20,
+    inscritosIds: ['e1'],
+    descripcion: 'Sesión guiada para soltar la semana de clases. Lleva tapete si puedes.',
+    imagen: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=1200',
+  },
+  {
+    id: 'ev3',
+    nombre: 'Feria de bienestar',
+    fecha: '2026-10-01',
+    lugar: 'Plazoleta central',
+    tipo: 'Campus',
+    cupo: 180,
+    inscritosIds: [],
+    descripcion: 'Stands de salud, cultura y permanencia. Pasa aunque los módulos aún estén en cascarón.',
+    imagen: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=1200',
+  },
 ]
 
 function overlap(aStart, aEnd, bStart, bEnd) {

@@ -3,7 +3,13 @@ import { useStore } from './store/StoreContext.jsx'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
 import { rutaInicial } from './auth/rutas.js'
 import AppLayout from './layouts/AppLayout.jsx'
+import PublicLayout from './layouts/PublicLayout.jsx'
 import Login from './pages/Login.jsx'
+import Home from './pages/Home.jsx'
+import DeportesPublicos from './pages/DeportesPublicos.jsx'
+import EventosPublicos from './pages/EventosPublicos.jsx'
+import Areas from './pages/Areas.jsx'
+import RegistroEstudiante from './pages/RegistroEstudiante.jsx'
 import AdminDashboard from './pages/admin/AdminDashboard.jsx'
 import Deportes from './pages/admin/Deportes.jsx'
 import DeporteDetalle from './pages/admin/DeporteDetalle.jsx'
@@ -18,7 +24,6 @@ import Catalogo from './pages/estudiante/Catalogo.jsx'
 import EventosEst from './pages/estudiante/EventosEst.jsx'
 import MisDeportes from './pages/estudiante/MisDeportes.jsx'
 import Horario from './pages/estudiante/Horario.jsx'
-import Home from './pages/Home.jsx'
 
 export default function App() {
   const { user } = useStore()
@@ -26,14 +31,17 @@ export default function App() {
 
   return (
     <Routes>
-      <Route
-        path="/"
-        element={user ? <Navigate to={destino} replace /> : (
-          <div className="public-shell">
-            <Home />
-          </div>
-        )}
-      />
+      <Route element={<PublicLayout />}>
+        <Route
+          path="/"
+          element={user ? <Navigate to={destino} replace /> : <Home />}
+        />
+        <Route path="/deportes" element={<DeportesPublicos />} />
+        <Route path="/eventos" element={<EventosPublicos />} />
+        <Route path="/areas" element={<Areas />} />
+        <Route path="/areas/:areaId" element={<Areas />} />
+      </Route>
+
       <Route path="/login" element={user ? <Navigate to={destino} replace /> : <Login />} />
 
       <Route element={<ProtectedRoute />}>
@@ -58,6 +66,7 @@ export default function App() {
 
           <Route element={<ProtectedRoute roles={['estudiante']} />}>
             <Route path="/estudiante/catalogo" element={<Catalogo />} />
+            <Route path="/registro-estudiante" element={<RegistroEstudiante />} />
             <Route path="/estudiante/eventos" element={<EventosEst />} />
             <Route path="/estudiante/mis-deportes" element={<MisDeportes />} />
             <Route path="/estudiante/horario" element={<Horario />} />

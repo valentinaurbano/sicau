@@ -1,34 +1,37 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { useStore } from '../store/StoreContext.jsx'
+import { MODULOS_PROXIMOS } from '../components/home/modulosProximos.js'
 import './Navbar.css'
 
-// Ajusta las rutas `to` a las de tu router.
 const PRINCIPAL = [
   { label: 'Inicio', to: '/', end: true },
-  { label: 'Eventos', to: '/eventos' },
   { label: 'Deportes', to: '/deportes' },
+  { label: 'Eventos', to: '/eventos' },
 ]
 
-// Sin `to` = todavía no tiene página. Cuando la tenga, agrega `to` y se vuelve enlace.
-const AREAS = [
-  { label: 'Desarrollo Humano y Orientación', estado: 'En desarrollo' },
-  { label: 'Permanencia Estudiantil', estado: 'Próximamente' },
-  { label: 'Salud Integral', estado: 'En desarrollo' },
-  { label: 'Cultura', estado: 'Próximamente' },
-]
-
-export default function Navbar({ user, onLogout }) {
+export default function Navbar() {
+  const { user, logout } = useStore()
+  const location = useLocation()
+  const navigate = useNavigate()
   const [menuAbierto, setMenuAbierto] = useState(false)
   const [areasAbierto, setAreasAbierto] = useState(false)
   const areasRef = useRef(null)
+  const inicio = user ? '/inicio' : '/'
 
-  // Cierra el desplegable al hacer clic fuera o con Escape
   useEffect(() => {
-    if (!areasAbierto) return
-    const fuera = (e) => {
-      if (!areasRef.current?.contains(e.target)) setAreasAbierto(false)
+    setMenuAbierto(false)
+    setAreasAbierto(false)
+  }, [location.pathname, location.hash])
+
+  useEffect(() => {
+    if (!areasAbierto) return undefined
+    const fuera = (event) => {
+      if (!areasRef.current?.contains(event.target)) setAreasAbierto(false)
     }
-    const tecla = (e) => e.key === 'Escape' && setAreasAbierto(false)
+    const tecla = (event) => {
+      if (event.key === 'Escape') setAreasAbierto(false)
+    }
     document.addEventListener('mousedown', fuera)
     document.addEventListener('keydown', tecla)
     return () => {
@@ -42,14 +45,20 @@ export default function Navbar({ user, onLogout }) {
     setAreasAbierto(false)
   }
 
+  function cerrarSesion() {
+    cerrar()
+    logout()
+    navigate('/')
+  }
+
   return (
-    <nav className="navbar" aria-label="Principal">
+    <nav className="navbar" aria-label="Navegación principal">
       <div className="navbar__inner">
-        <Link to="/" className="navbar__brand" onClick={cerrar}>
+        <Link to={inicio} className="navbar__brand" onClick={cerrar}>
           <span className="navbar__mark" aria-hidden="true">UA</span>
           <span className="navbar__name">
-            Bienestar
-            <small>Uniautónoma</small>
+            Uniautónoma
+            <small>Bienestar Universitario</small>
           </span>
         </Link>
 
@@ -58,26 +67,29 @@ export default function Navbar({ user, onLogout }) {
           className="navbar__toggle"
           aria-expanded={menuAbierto}
           aria-controls="navbar-menu"
-          onClick={() => setMenuAbierto((v) => !v)}
+          aria-label={menuAbierto ? 'Cerrar menú' : 'Abrir menú'}
+          onClick={() => setMenuAbierto((value) => !value)}
         >
-          <span className="navbar__sr">{menuAbierto ? 'Cerrar menú' : 'Abrir menú'}</span>
           <span className="navbar__bars" aria-hidden="true" />
         </button>
 
         <div id="navbar-menu" className={`navbar__menu${menuAbierto ? ' is-open' : ''}`}>
           <ul className="navbar__links">
-            {PRINCIPAL.map((item) => (
-              <li key={item.label}>
-                <NavLink
-                  to={item.to}
-                  end={item.end}
-                  className={({ isActive }) => `navbar__link${isActive ? ' is-active' : ''}`}
-                  onClick={cerrar}
-                >
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
+            {PRINCIPAL.map((item) => {
+              const to = item.label === 'Inicio' ? inicio : item.to
+              return (
+                <li key={item.label}>
+                  <NavLink
+                    to={to}
+                    end={item.end}
+                    className={({ isActive }) => `navbar__link${isActive ? ' is-active' : ''}`}
+                    onClick={cerrar}
+                  >
+                    {item.label}
+                  </NavLink>
+                </li>
+              )
+            })}
 
             <li className="navbar__areas" ref={areasRef}>
               <button
@@ -85,46 +97,57 @@ export default function Navbar({ user, onLogout }) {
                 className="navbar__link navbar__link--button"
                 aria-expanded={areasAbierto}
                 aria-controls="navbar-areas"
-                onClick={() => setAreasAbierto((v) => !v)}
+                onClick={() => setAreasAbierto((value) => !value)}
               >
-                Otras áreas
-                <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
-                  <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                Áreas de bienestar
+                <svg viewBox="0 0 12 12" width="13" height="13" aria-hidden="true">
+                  <path
+                    d="M2.5 4.5 6 8l3.5-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </button>
 
-              <ul id="navbar-areas" className={`navbar__panel${areasAbierto ? ' is-open' : ''}`}>
-                {AREAS.map((area) => (
-                  <li key={area.label}>
-                    {area.to ? (
-                      <NavLink to={area.to} className="navbar__area" onClick={cerrar}>
-                        <span>{area.label}</span>
-                        <em className="navbar__tag">{area.estado}</em>
+              <div id="navbar-areas" className={`navbar__panel${areasAbierto ? ' is-open' : ''}`}>
+                <div className="navbar__panel-head">
+                  <span>Explora bienestar</span>
+                  <small>Áreas disponibles en el campus</small>
+                </div>
+                <ul className="navbar__panel-grid">
+                  {MODULOS_PROXIMOS.map((area, index) => (
+                    <li key={area.id}>
+                      <NavLink className="navbar__area" to={`/areas/${area.id}`} onClick={cerrar}>
+                        <span className="navbar__area-number">0{index + 1}</span>
+                        <span className="navbar__area-copy">
+                          <strong>{area.titulo}</strong>
+                          <em>{area.estado}</em>
+                        </span>
+                        <span className="navbar__area-arrow" aria-hidden="true">→</span>
                       </NavLink>
-                    ) : (
-                      <span className="navbar__area is-pending" aria-disabled="true">
-                        <span>{area.label}</span>
-                        <em className="navbar__tag">{area.estado}</em>
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </li>
           </ul>
 
           <div className="navbar__session">
             {user ? (
               <>
-                <span className="navbar__user">{user.nombre.split(' ')[0]}</span>
-                {onLogout && (
-                  <button type="button" className="navbar__out" onClick={() => { cerrar(); onLogout() }}>
-                    Cerrar sesión
-                  </button>
-                )}
+                <Link className="navbar__user" to="/inicio" onClick={cerrar}>
+                  <span>{user.nombre.split(' ')[0]}</span>
+                  <small>Mi espacio</small>
+                </Link>
+                <button type="button" className="navbar__out" onClick={cerrarSesion}>
+                  Salir
+                </button>
               </>
             ) : (
-              <Link to="/login" className="navbar__login" onClick={cerrar}>
+              <Link className="navbar__login navbar__login--primary" to="/login" onClick={cerrar}>
                 Iniciar sesión
               </Link>
             )}

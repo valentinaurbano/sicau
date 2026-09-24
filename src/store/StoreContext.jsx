@@ -127,10 +127,13 @@ export function StoreProvider({ children }) {
     else localStorage.removeItem('sicau-user')
   }
 
-  function login(correo, password) {
+  function login(correo, password, { rolRequerido } = {}) {
     if (!isInstitutionalEmail(correo)) return { ok: false, error: emailDomainError() }
     const found = users.find((u) => u.correo === correo && u.password === password)
     if (!found) return { ok: false, error: 'Credenciales inválidas' }
+    if (rolRequerido && found.rol !== rolRequerido) {
+      return { ok: false, error: 'Debes iniciar sesión con una cuenta de estudiante para confirmar esta inscripción.' }
+    }
     const { password: _, ...safe } = found
     persist(safe)
     return { ok: true, user: safe }

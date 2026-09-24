@@ -16,6 +16,7 @@ const menus = {
     ['/docente/asistencias', 'Historial'],
   ],
   estudiante: [
+    ['/inicio', 'Inicio'],
     ['/estudiante/catalogo', 'Catálogo'],
     ['/estudiante/eventos', 'Eventos'],
     ['/estudiante/mis-deportes', 'Mis deportes'],

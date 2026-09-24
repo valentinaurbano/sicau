@@ -6,8 +6,11 @@ const FALLBACK_IMG = 'https://images.unsplash.com/photo-1461896836934-ffe607ba68
 
 export default function EventsCarousel({ eventos, user, onParticipar }) {
   const destacados = useMemo(() => {
-    const proximos = [...eventos].sort((a, b) => a.fecha.localeCompare(b.fecha))
-    return proximos.slice(0, 4)
+    const hoy = new Date().toISOString().slice(0, 10)
+    return [...eventos]
+      .filter((evento) => evento.fecha >= hoy)
+      .sort((a, b) => a.fecha.localeCompare(b.fecha))
+      .slice(0, 4)
   }, [eventos])
 
   const [indice, setIndice] = useState(0)
@@ -15,7 +18,7 @@ export default function EventsCarousel({ eventos, user, onParticipar }) {
   useEffect(() => {
     if (destacados.length < 2) return undefined
     const timer = setInterval(() => {
-      setIndice((i) => (i + 1) % destacados.length)
+      setIndice((current) => (current + 1) % destacados.length)
     }, 6500)
     return () => clearInterval(timer)
   }, [destacados.length])
@@ -23,8 +26,12 @@ export default function EventsCarousel({ eventos, user, onParticipar }) {
   if (destacados.length === 0) {
     return (
       <section className="home-section">
-        <h2>Agenda del campus</h2>
-        <p>Aún no hay eventos publicados. Vuelve en unos días.</p>
+        <div className="home-section__head">
+          <div>
+            <h2>Agenda del campus</h2>
+            <p>Aún no hay eventos publicados. Vuelve pronto para conocer las próximas actividades.</p>
+          </div>
+        </div>
       </section>
     )
   }
@@ -33,14 +40,23 @@ export default function EventsCarousel({ eventos, user, onParticipar }) {
   const inscrito = !!user && actual.inscritosIds.includes(user.id)
   const lleno = actual.inscritosIds.length >= actual.cupo
   const esEstudiante = user?.rol === 'estudiante'
+  const agendaUrl = !user
+    ? '/eventos'
+    : esEstudiante
+      ? '/estudiante/eventos'
+      : user?.rol === 'admin'
+        ? '/admin/eventos'
+        : '/docente'
 
   return (
     <section className="home-section" aria-labelledby="agenda-campus">
       <div className="home-section__head">
         <div>
-          <h2 id="agenda-campus">Agenda del campus</h2>
-          <p>Lo más cercano para toda la comunidad: estudiantes, docentes y administración.</p>
+          <span className="home-section__eyebrow">Agenda del campus</span>
+          <h2 id="agenda-campus">Lo que viene para ti</h2>
+          <p>Encuentros, torneos y actividades que hacen parte de la vida universitaria.</p>
         </div>
+        <Link className="btn ghost" to={agendaUrl}>Ver agenda completa</Link>
       </div>
 
       <div className="events-stage">
@@ -52,7 +68,7 @@ export default function EventsCarousel({ eventos, user, onParticipar }) {
             aria-label={actual.nombre}
           />
           <div className="event-hero__body">
-            <span className="chip" style={{ background: 'rgba(245,165,36,.92)', color: '#1b1404' }}>
+            <span className="chip" style={{ background: 'var(--orange)', color: '#1b1404' }}>
               {actual.tipo}
             </span>
             <h3>{actual.nombre}</h3>
@@ -72,6 +88,12 @@ export default function EventsCarousel({ eventos, user, onParticipar }) {
                   {inscrito ? 'Ya participas' : lleno ? 'Sin cupo' : 'Quiero participar'}
                 </button>
               )}
+              {!user && !lleno && (
+                <Link className="btn gold" to={`/login?evento=${actual.id}`}>
+                  Participar en el evento
+                </Link>
+              )}
+              {!user && lleno && <button className="btn ghost" disabled>Sin cupo</button>}
               {user?.rol === 'admin' && (
                 <Link className="btn gold" to="/admin/eventos">Gestionar eventos</Link>
               )}
@@ -83,17 +105,17 @@ export default function EventsCarousel({ eventos, user, onParticipar }) {
         </article>
 
         <div className="events-rail" role="tablist" aria-label="Elegir evento">
-          {destacados.map((ev, i) => (
+          {destacados.map((evento, eventIndex) => (
             <button
-              key={ev.id}
+              key={evento.id}
               type="button"
               role="tab"
-              aria-selected={i === indice}
-              className={`event-thumb ${i === indice ? 'is-active' : ''}`}
-              onClick={() => setIndice(i)}
+              aria-selected={eventIndex === indice}
+              className={`event-thumb ${eventIndex === indice ? 'is-active' : ''}`}
+              onClick={() => setIndice(eventIndex)}
             >
-              <strong>{ev.nombre}</strong>
-              <span>{formatFechaLarga(ev.fecha)} · {ev.lugar}</span>
+              <strong>{evento.nombre}</strong>
+              <span>{formatFechaLarga(evento.fecha)} · {evento.lugar}</span>
             </button>
           ))}
         </div>
@@ -105,7 +127,7 @@ export default function EventsCarousel({ eventos, user, onParticipar }) {
             type="button"
             className="icon-btn"
             aria-label="Evento anterior"
-            onClick={() => setIndice((i) => (i - 1 + destacados.length) % destacados.length)}
+            onClick={() => setIndice((current) => (current - 1 + destacados.length) % destacados.length)}
           >
             ←
           </button>
@@ -113,7 +135,7 @@ export default function EventsCarousel({ eventos, user, onParticipar }) {
             type="button"
             className="icon-btn"
             aria-label="Evento siguiente"
-            onClick={() => setIndice((i) => (i + 1) % destacados.length)}
+            onClick={() => setIndice((current) => (current + 1) % destacados.length)}
           >
             →
           </button>

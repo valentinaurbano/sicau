@@ -8,25 +8,28 @@ function cupoPct(deporte) {
 export default function DeporteCard({ deporte, users, user, compact, onInscribir }) {
   const lleno = deporte.inscritosIds.length >= deporte.cupo
   const inscrito = !!user && deporte.inscritosIds.includes(user.id)
-  const enseña = !!user && deporte.horarios.some((h) => h.docenteId === user.id)
+  const enseña = !!user && deporte.horarios.some((horario) => horario.docenteId === user.id)
+  const registroUrl = `/login?deporte=${encodeURIComponent(deporte.id)}`
 
   return (
     <article className={compact ? 'deporte-card' : 'deporte-destacado'}>
-      {deporte.imagen && <img src={deporte.imagen} alt="" />}
+      {deporte.imagen && <img src={deporte.imagen} alt={`${deporte.nombre} en el campus`} />}
       <div className={compact ? 'body' : 'deporte-destacado__copy'}>
-        {!compact && <span className="chip">Destacado de la semana</span>}
+        {!compact && <span className="chip">Recomendada · más cupos disponibles</span>}
         <h3>{deporte.nombre}</h3>
         <p>{deporte.descripcion}</p>
         <div className="cupo-bar" aria-hidden="true">
           <span style={{ width: `${cupoPct(deporte)}%` }} />
         </div>
-        <small>{deporte.inscritosIds.length}/{deporte.cupo} cupos · {deporte.categorias.join(', ')}</small>
+        <small>
+          {deporte.inscritosIds.length}/{deporte.cupo} cupos · {deporte.categorias.join(', ')}
+        </small>
         <div className="horario-list">
-          {deporte.horarios.map((h) => {
-            const docente = users.find((u) => u.id === h.docenteId)
+          {deporte.horarios.map((horario) => {
+            const docente = users.find((item) => item.id === horario.docenteId)
             return (
-              <span className="chip" key={h.id}>
-                {h.dia} {h.inicio}–{h.fin} · {h.lugar}
+              <span className="chip" key={horario.id}>
+                {horario.dia} {horario.inicio}–{horario.fin} · {horario.lugar}
                 {docente ? ` · ${docente.nombre}` : ''}
               </span>
             )
@@ -37,11 +40,17 @@ export default function DeporteCard({ deporte, users, user, compact, onInscribir
             <button
               className="btn primary"
               disabled={lleno || inscrito}
-              onClick={() => onInscribir(deporte)}
+              onClick={() => onInscribir?.(deporte)}
             >
               {inscrito ? 'Ya inscrito' : lleno ? 'Sin cupo' : 'Inscribirme'}
             </button>
           )}
+          {!user && !lleno && (
+            <Link className="btn primary" to={registroUrl} aria-label={`Iniciar sesión para inscribirme en ${deporte.nombre}`}>
+              Inscribirme
+            </Link>
+          )}
+          {!user && lleno && <button className="btn ghost" disabled>Sin cupo</button>}
           {user?.rol === 'docente' && enseña && (
             <Link className="btn primary" to={`/docente/grupos/${deporte.id}`}>Ver mi grupo</Link>
           )}
